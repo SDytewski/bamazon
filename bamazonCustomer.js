@@ -2,7 +2,7 @@ const inquirer = require("inquirer");
 
 const mysql = require("mysql");
 
-const cTable = require("console.table");
+const cTable = require('console.table');
 
 const connection = mysql.createConnection({
     host: "localhost",
@@ -18,16 +18,51 @@ const connection = mysql.createConnection({
     database: "bamazon"
 });
 
-connection.connect(err => {
-    if (err) throw err;
-   
-    afterConnection();
-});
 
-function afterConnection() {
+function createItems() {
     connection.query("SELECT * FROM productions ", (err, res) => {
         if (err) throw err;
-        //console.log(res);
-        connection.end();
+        else console.table(res);
+        promptDisplay();
     });
 }
+
+createItems();
+
+function promptDisplay() {
+
+
+    inquirer.prompt({
+        name: "choice",
+        type: "input",
+        message: "Which product ID number would you like to buy?",
+        validate: function (value) {
+            if (isNaN(value) === false) {
+                return true;
+            }
+            return false;
+        }
+
+
+    },
+
+        {
+            name: "quantity",
+            type: "input",
+            message: "How many would you like to buy?",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            }
+        },
+
+
+
+
+        //});
+    );
+
+}
+//promptDisplay();
