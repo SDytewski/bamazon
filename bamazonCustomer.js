@@ -1,3 +1,4 @@
+
 const inquirer = require("inquirer");
 
 const mysql = require("mysql");
@@ -32,19 +33,20 @@ createItems();
 function promptDisplay() {
 
 
-    inquirer.prompt({
-        name: "choice",
-        type: "input",
-        message: "Which product ID number would you like to buy?",
-        validate: function (value) {
-            if (isNaN(value) === false) {
-                return true;
+    inquirer.prompt([
+        {
+            name: "choice",
+            type: "input",
+            message: "Which product ID number would you like to buy?",
+            validate: function (value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
             }
-            return false;
-        }
 
 
-    },
+        },
 
         {
             name: "quantity",
@@ -62,7 +64,41 @@ function promptDisplay() {
 
 
         //});
-    );
+    ]).then(function (user_response) {
+        connection.query("UPDATE productions SET stock_quantity = stock_quantity - ?  WHERE ?",
+        
+
+
+        
+
+
+
+        [ 
+            
+          user_response.quantity
+            ,
+            
+             user_response.choice
+            
+          ],
+
+          
+        
+            //"SELECT * FROM WHERE item_id = " + user_response.item_id, (err, row_res) => {7
+      
+        
+        )
+
+
+        
+
+    })
+
+
 
 }
+        
+
 //promptDisplay();
+
+
