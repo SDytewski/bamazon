@@ -19,39 +19,46 @@ const connection = mysql.createConnection({
     database: "bamazon"
 });
 
+connection.connect(function(err){
+    if(err){
+        console.error("error connecting: " +err);
+    }
+    createItems();
+})
+
 
 function createItems() {
     connection.query("SELECT * FROM productions ", (err, res) => {
         if (err) throw err;
         else console.table(res);
-        promptDisplay();
+        promptDisplay(res);
     });
 }
 
 
-function checkForInventory() {
-    connection.query("SELECT * FROM productions ", (err, res) => {
-       // if (err) throw err;
-        // else console.log(res);
+// function checkForInventory() {
+//     connection.query("SELECT * FROM productions ", (err, res) => {
+//        // if (err) throw err;
+//         // else console.log(res);
 
-        for (var i = 0; i < res.length; i++) {
-
-
-            if (res[i].stock_quantity < 0 ) {
-                console.log("Sorry we are out! Please try again")
-
-            }
-        }
-    });
-}
+//         for (var i = 0; i < res.length; i++) {
 
 
+//             if (res[i].stock_quantity < 1 ) {
+//                 console.log("Sorry we are out! Please try again")
 
-createItems();
+//             }
+//         }
+//     });
+// }
 
 
 
-function promptDisplay() {
+// createItems();
+
+
+
+function promptDisplay(inventory) {
 
 
     inquirer.prompt([
@@ -65,10 +72,46 @@ function promptDisplay() {
                 }
                 return false;
             }
+        }
+
+        // {
+        //     name: "quantity",
+        //     type: "input",
+        //     message: "How many would you like to buy?",
+        //     validate: function (value) {
+        //         if (isNaN(value) === false) {
+        //             return true;
+        //         }
+        //         return false;
+        //     }
+        // },
 
 
-        },
 
+        //});
+    ]).then(function(val){
+        var choiceId = parseInt(val.choice);
+        var product = checkInventory(choiceId,inventory);
+        if(product){
+            promptCustomerForQuanity(product);
+        }
+        else{
+            console.log("\n The item is not in the inventory");
+        }
+    })
+    function checkInventory(choiceId, inventory){
+        console.log("inside checkInvetory function")
+        for(var i=0; i < inventory; i++){
+            if(inventory[i].item_id === choiceId){
+                console.log("inventory: "+inventory[i]);
+                return inventory[i];
+            }
+        }
+        return null;
+    }
+
+function promptCustomerForQuanity(product){
+    inquirer.prompt([
         {
             name: "quantity",
             type: "input",
@@ -79,42 +122,78 @@ function promptDisplay() {
                 }
                 return false;
             }
-        },
-
-
-
-        //});
+        }
     ])
+    .then(function(val){
+        var quantity = parseInt(val.quantity);
+        if(quantity > product.stock_quantity){
+            console.log("\n Insufficent Quantity");
+        }
+        else{
+            makePurchase(product, quantity);
+        }
 
 
+    })
+
+}
+
+function makePurchase(product, quantity){
+    connection.query("UPDATE productions SET stock_quantity = stock_quantity - ?  WHERE ?",
+
+
+                [
+
+                    quantity 
+                    ,
+
+                    { item_id: product.item_id }
+
+                ],
+                function(err, res){
+                    console.log("/n Successfull purchased ");
+                    createItems();
+                }
+
+
+            )
+}
 
     
 
 
 
-        .then(function (user_response) {
-            connection.query("UPDATE productions SET stock_quantity = stock_quantity - ?  WHERE ?",
+//         .then(
+//             //check quantity()
+//             //if/else
+            
+//             //if
+            
+//             function (user_response) {
+//             connection.query("UPDATE productions SET stock_quantity = stock_quantity - ?  WHERE ?",
 
 
-                [
+//                 [
 
-                    user_response.quantity 
-                    ,
+//                     user_response.quantity 
+//                     ,
 
-                    { item_id: user_response.choice }
+//                     { item_id: user_response.choice }
 
-                ],
+//                 ],
 
 
-            )
+//             )
           
-            checkForInventory();
-        })
+//             checkForInventory();
+//         }
+//         //else run prompt again
+//         )
 
+
+// }
+
+
+// //promptDisplay();
 
 }
-
-
-//promptDisplay();
-
-
