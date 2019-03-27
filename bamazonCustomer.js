@@ -28,7 +28,28 @@ function createItems() {
     });
 }
 
+
+function checkForInventory() {
+    connection.query("SELECT * FROM productions ", (err, res) => {
+       // if (err) throw err;
+        // else console.log(res);
+
+        for (var i = 0; i < res.length; i++) {
+
+
+            if (res[i].stock_quantity < 0 ) {
+                console.log("Sorry we are out! Please try again")
+
+            }
+        }
+    });
+}
+
+
+
 createItems();
+
+
 
 function promptDisplay() {
 
@@ -63,31 +84,36 @@ function promptDisplay() {
 
 
         //});
-    ]).then(function (user_response) {
-        connection.query("UPDATE productions SET stock_quantity = stock_quantity - ?  WHERE ?",
-        
-      
-   
+    ])
 
-        [ 
-            
-          user_response.quantity
-            ,
-            
-          {   item_id : user_response.choice }
-            
-          ],
 
-     
-      
-        
-        )
-        
 
-    })
+    
+
+
+
+        .then(function (user_response) {
+            connection.query("UPDATE productions SET stock_quantity = stock_quantity - ?  WHERE ?",
+
+
+                [
+
+                    user_response.quantity 
+                    ,
+
+                    { item_id: user_response.choice }
+
+                ],
+
+
+            )
+          
+            checkForInventory();
+        })
+
 
 }
-        
+
 
 //promptDisplay();
 
