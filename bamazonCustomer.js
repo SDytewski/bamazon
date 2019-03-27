@@ -62,39 +62,29 @@ function promptDisplay() {
 
 
 
-
         //});
     ]).then(function (user_response) {
         connection.query("UPDATE productions SET stock_quantity = stock_quantity - ?  WHERE ?",
         
-
-
-        
-
-
+      
+   
 
         [ 
             
           user_response.quantity
             ,
             
-             user_response.choice
+          {   item_id : user_response.choice }
             
           ],
 
-          
-        
-            //"SELECT * FROM WHERE item_id = " + user_response.item_id, (err, row_res) => {7
+     
       
         
         )
-
-
         
 
     })
-
-
 
 }
         
