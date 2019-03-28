@@ -54,4 +54,4 @@ I have selected to buy item number 10 which is the "Shake Weight." I tried to bu
 
 ![third-prmpt](images/bamazonSQLTableCreate.png)
 
-**Example 7** I created this table as my first step. You can see the amounts of stock inventory I had when I originally started the program.  I have made several purchases since then.
+**Example 7** I created this table as my first step. You can see the amounts of stock inventory I had for "hockey gloves" when I originally created the program. It started out as "100."  I have made several purchases since then. These are how tables are made in mySQL.  If you look at "Insert into" you can see how "hockey gloves" were originally created with the category, price, and stock.  My table is called "productions."
