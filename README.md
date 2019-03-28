@@ -46,12 +46,12 @@ I have selected to buy item number 10 which is the "Shake Weight." I tried to bu
 **Example 5** I decided to buy "2" of the  "Shake Weight."  The order goes through because I had "762" in my stock inventory. Now their are "760" of them in my inventory.  
 
 
-![first-prompt](\images\bamazonSQL-Table.png)
+![second-prompt](\images\bamazonSQL-Table.png)
 
 **Example 6** Here are the reflections of all the purchases I made.  You can see them  on the right side of the screen in Visual Studio Code.  On the left side of the screen is MySQL Workbench which is where I'm getting the table from. It has the same information displayed.
 
 
 
-![first-prompt](\images\bamazonSQL-TableCreate.png)
+![third-prompt](\images\bamazonSQL-TableCreate.png)
 
 **Example 7** I created this table as my first step. You can see the amounts of stock inventory I had when I originally started the program.  I have made several purchases since then.
