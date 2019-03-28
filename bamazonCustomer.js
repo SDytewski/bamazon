@@ -36,29 +36,9 @@ function createItems() {
 }
 
 
-// function checkForInventory() {
-//     connection.query("SELECT * FROM productions ", (err, res) => {
-//        // if (err) throw err;
-//         // else console.log(res);
-
-//         for (var i = 0; i < res.length; i++) {
 
 
-//             if (res[i].stock_quantity < 1 ) {
-//                 console.log("Sorry we are out! Please try again")
-
-//             }
-//         }
-//     });
-// }
-
-
-
-// createItems();
-
-
-
-function promptDisplay(inventory) {
+function promptDisplay(res) {
 
 
     inquirer.prompt([
@@ -91,7 +71,8 @@ function promptDisplay(inventory) {
         //});
     ]).then(function(val){
         var choiceId = parseInt(val.choice);
-        var product = checkInventory(choiceId,inventory);
+        var product = checkInventory(choiceId,res);
+        
         if(product){
             promptCustomerForQuanity(product);
         }
@@ -101,10 +82,10 @@ function promptDisplay(inventory) {
     })
     function checkInventory(choiceId, inventory){
         console.log("inside checkInvetory function")
-        for(var i=0; i < inventory; i++){
-            if(inventory[i].item_id === choiceId){
-                console.log("inventory: "+inventory[i]);
-                return inventory[i];
+        for(var i=0; i < res.length; i++){
+            if(res[i].item_id === choiceId){
+                console.log("inventory: Item #"+res[i].item_id);
+                return res[i];
             }
         }
         return null;
@@ -127,7 +108,8 @@ function promptCustomerForQuanity(product){
     .then(function(val){
         var quantity = parseInt(val.quantity);
         if(quantity > product.stock_quantity){
-            console.log("\n Insufficent Quantity");
+            console.log("\n Insufficent Quantity, pick another amount please.");
+            promptCustomerForQuanity(product)
         }
         else{
             makePurchase(product, quantity);
@@ -151,7 +133,8 @@ function makePurchase(product, quantity){
 
                 ],
                 function(err, res){
-                    console.log("/n Successfull purchased ");
+                    console.log("\n Successfull purchased Item #" + quantity + "\n This cost $" + product.price +" each"
+                    + "\n Your total is: $" + quantity * product.price + "\n Thank you for shopping at Bamazon®" + "\n \n \n" );
                     createItems();
                 }
 
@@ -197,3 +180,4 @@ function makePurchase(product, quantity){
 // //promptDisplay();
 
 }
+
