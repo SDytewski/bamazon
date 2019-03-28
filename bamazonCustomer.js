@@ -1,3 +1,4 @@
+// all of our packages
 
 const inquirer = require("inquirer");
 
@@ -19,6 +20,7 @@ const connection = mysql.createConnection({
     database: "bamazon"
 });
 
+//make connection to MYSQL
 connection.connect(function(err){
     if(err){
         console.error("error connecting: " +err);
@@ -27,6 +29,7 @@ connection.connect(function(err){
 })
 
 
+//function that starts everything
 function createItems() {
     connection.query("SELECT * FROM productions ", (err, res) => {
         if (err) throw err;
@@ -35,8 +38,7 @@ function createItems() {
     });
 }
 
-
-
+//prompt to ask questions function
 
 function promptDisplay(res) {
 
@@ -54,21 +56,8 @@ function promptDisplay(res) {
             }
         }
 
-        // {
-        //     name: "quantity",
-        //     type: "input",
-        //     message: "How many would you like to buy?",
-        //     validate: function (value) {
-        //         if (isNaN(value) === false) {
-        //             return true;
-        //         }
-        //         return false;
-        //     }
-        // },
+    // checks to see if the item is in the inventory
 
-
-
-        //});
     ]).then(function(val){
         var choiceId = parseInt(val.choice);
         var product = checkInventory(choiceId,res);
@@ -80,8 +69,11 @@ function promptDisplay(res) {
             console.log("\n The item is not in the inventory");
         }
     })
+
+   //function that runs a loop matching inventory with the users choice
+
     function checkInventory(choiceId, inventory){
-        console.log("inside checkInvetory function")
+        
         for(var i=0; i < res.length; i++){
             if(res[i].item_id === choiceId){
                 console.log("inventory: Item #"+res[i].item_id);
@@ -90,6 +82,8 @@ function promptDisplay(res) {
         }
         return null;
     }
+
+    //asks how much the customer needs
 
 function promptCustomerForQuanity(product){
     inquirer.prompt([
@@ -105,6 +99,8 @@ function promptCustomerForQuanity(product){
             }
         }
     ])
+
+    //checks to see if their is enough of item in stock, if not then the user gets asked again how much.
     .then(function(val){
         var quantity = parseInt(val.quantity);
         if(quantity > product.stock_quantity){
@@ -120,6 +116,7 @@ function promptCustomerForQuanity(product){
 
 }
 
+//function that runs and subtracts item out of stock by ID from MYSQL, then gives the total and starts agin.
 function makePurchase(product, quantity){
     connection.query("UPDATE productions SET stock_quantity = stock_quantity - ?  WHERE ?",
 
@@ -133,7 +130,7 @@ function makePurchase(product, quantity){
 
                 ],
                 function(err, res){
-                    console.log("\n Successfull purchased Item #" + quantity + "\n This cost $" + product.price +" each"
+                    console.log("\n Successfull purchased " + quantity + "\n This cost $" + product.price +" each"
                     + "\n Your total is: $" + quantity * product.price + "\n Thank you for shopping at Bamazon®" + "\n \n \n" );
                     createItems();
                 }
@@ -142,42 +139,8 @@ function makePurchase(product, quantity){
             )
 }
 
-    
 
 
-
-//         .then(
-//             //check quantity()
-//             //if/else
-            
-//             //if
-            
-//             function (user_response) {
-//             connection.query("UPDATE productions SET stock_quantity = stock_quantity - ?  WHERE ?",
-
-
-//                 [
-
-//                     user_response.quantity 
-//                     ,
-
-//                     { item_id: user_response.choice }
-
-//                 ],
-
-
-//             )
-          
-//             checkForInventory();
-//         }
-//         //else run prompt again
-//         )
-
-
-// }
-
-
-// //promptDisplay();
 
 }
 
